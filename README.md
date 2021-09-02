@@ -108,6 +108,8 @@ The project allows users to:
 
 Note: you can set `QUEUE_CONNECTION=sync` in the .env file which will run the queue in synchronous mode and in this case step 9 will not be needed. 
 
-
 ## API's
-For API collection import `Invoices.postman_collection.json` you will find it in project root
+For API collection import `Invoices.postman_collection.json` you will find it in project root.
+
+## What next
+To check what the next steps should be check `next_steps.txt` you will find it in project root.
