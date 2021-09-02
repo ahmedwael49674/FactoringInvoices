@@ -1,0 +1,63 @@
+version: '3.7'
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: invoices-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: ms-invoices
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: secret_user
+      MYSQL_PASSWORD: secret_password
+    networks:
+      - invoices-net
+    ports:
+      - "3366:3306"
+    volumes:
+      - ./data/dev:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    hostname: phpmyadmin.local
+    container_name: invoices-phpmyadmin
+    networks:
+      - invoices-net
+    ports:
+      - "8060:80"
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+
+  app:
+    build:
+      context: .
+      dockerfile: app.dockerfile
+    container_name: app
+    environment: 
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_ROOT_PASSWORD=root
+      - DB_PORT=3306
+      - DB_DATABASE=ms-invoices
+      - DB_USERNAME=secret_user
+      - DB_PASSWORD=secret_password
+      - DB_FOREIGN_KEYS=true
+      - DB_ENGINE=innodb
+      - QUEUE_CONNECTION=database
+    ports:
+      - '80:80'
+    links:
+      - mysql
+      - phpmyadmin
+    restart: always
+    networks:
+      - invoices-net
+    volumes:
+      - ./logs/php/dev/:/var/log/php7/
+      - ./app:/var/www/app
+
+networks:
+  invoices-net:
+    name: invoices-net
+    driver: bridge

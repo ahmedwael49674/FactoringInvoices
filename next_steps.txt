@@ -1,0 +1,28 @@
+Add more tests:
+===============
+The writen feature tests is covered all the possibalities but more unit test could be writen to test the services and validators seperatly
+
+Invoice items:
+===============
+It is designed to carry more details about the invoice the database structure is ready in the database but no API's implemented yet
+    * `price`: decimal field to store price.
+    * `quantity`: integer field to store quantity.
+    * `description`: text field to store the item description.
+
+based on the business needs the Invoice total amount may be no longer set by the user and it could be the sum of the invoice items (price * quantity)
+or maybe Invoice items be just a placeholder to carry more details about the invoice 
+
+
+Currencies:
+===============
+Currencies structure is already implemented and used any new Currency added in \App\ModelsCurrency will be seeded automatically to database using CurrencyTableSeeder and application already used USD ad default but the next steps are to use multiple currencies and switch between them and this needs some business decisions like : 
+
+Is the debtor account uses one currency? 
+
+1. Yes, this will require the user to create one single debtor account for each currency and to add it in the debtor table then this currency will be the default any invoice associated with this debtor will use this currency.
+
+2. No, in this case, a debtor_balances table need to be created to store the total debit in each currency and the invoice amount will be added to this table but this opens a new question : 
+
+How to calculate the total debt amount in multiple currencies case? (This is a pure business decision)
+May set a number in each currency or may the total be the sum of all debits after converting them to specific currency but in this case, a new problem raises is the conversion between currencies
+
